@@ -1,0 +1,14 @@
+FROM ubuntu:22.04 AS builder
+
+RUN apt-get update && apt-get install -y clang
+
+WORKDIR /app
+COPY hello.cpp .
+
+RUN clang++ -static -o hello hello.cpp
+
+FROM alpine:latest
+
+COPY --from=builder /app/hello /hello
+
+CMD ["/hello"]
